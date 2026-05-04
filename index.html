@@ -18,7 +18,7 @@
                             grayLight: '#f4f4f4',  /* Light gray from website */
                             gray: '#e9e9e9',       /* Medium gray */
                             textMain: '#302727',   /* Primary text color */
-                            textMuted: '#6b7280'   /* Muted text color (adjusted for better contrast without bolding) */
+                            textMuted: '#6b7280'   /* Muted text color */
                         }
                     },
                     fontFamily: {
@@ -29,6 +29,9 @@
         }
     </script>
     <style>
+        /* Strict Box Sizing for accurate measurements */
+        * { box-sizing: border-box !important; }
+
         body { 
             background-color: #e5e7eb;
             -webkit-font-smoothing: antialiased;
@@ -61,35 +64,54 @@
             user-select: none;
         }
 
-        /* Modern Print Optimization */
+        /* -------------------------------------------------------------------------- */
+        /* BULLETPROOF PRINT OPTIMIZATION (Strict A4 Size 210x297mm)                  */
+        /* -------------------------------------------------------------------------- */
         @media print {
-            @page { size: A4; margin: 0; }
+            @page { 
+                size: A4 portrait; 
+                margin: 0; /* Remove browser default page margins completely */
+            }
+            
             html, body { 
                 width: 210mm !important;
                 height: 297mm !important;
                 margin: 0 !important; 
                 padding: 0 !important; 
-                overflow: hidden !important; /* Force no scroll/second page */
+                overflow: hidden !important; /* Force no second page */
                 background-color: white !important; 
+                display: block !important; /* Overrides body flexbox which causes padding issues */
             }
+
             .no-print { display: none !important; }
+            
             #invoice-container {
+                position: absolute !important; /* Stick to top-left strictly */
+                top: 0 !important;
+                left: 0 !important;
                 width: 210mm !important;
-                height: 297mm !important;
-                max-height: 297mm !important;
-                box-shadow: none !important;
-                margin: 0 auto !important;
+                height: 296mm !important; /* 1mm safe zone to prevent page spill */
+                min-height: 296mm !important;
+                max-height: 296mm !important;
+                margin: 0 !important;
                 padding: 0 !important;
-                transform: scale(0.96); /* Scale down slightly to escape browser margins */
-                transform-origin: top center;
+                box-shadow: none !important;
+                border: none !important;
                 overflow: hidden !important;
+                page-break-after: avoid !important;
+                page-break-before: avoid !important;
+                page-break-inside: avoid !important;
+                transform: none !important; /* Remove scaling hacks */
             }
+
             .content-wrapper { 
-                padding: 1.5rem 2.5rem !important; 
-                gap: 1rem !important; /* Reduce vertical gaps during print */
+                padding: 15mm 20mm !important; /* Use exact mm for padding instead of rem */
             }
-            * { overflow: visible !important; }
-            .watermark { color: rgba(51, 153, 102, 0.04) !important; }
+
+            /* Prevent accidental overflows inside */
+            table, tr, td, th {
+                page-break-inside: avoid !important;
+            }
         }
     </style>
 </head>
@@ -121,10 +143,10 @@
     </div>
 
     <!-- MAIN VOUCHER / A4 PAPER -->
-    <div id="invoice-container" class="bg-white w-full max-w-[210mm] shadow-2xl flex flex-col min-h-[297mm] relative overflow-hidden">
+    <div id="invoice-container" class="bg-white w-full max-w-[210mm] shadow-2xl flex flex-col relative">
         
         <!-- Top Green Accent Line -->
-        <div class="h-3 w-full bg-zad-green"></div>
+        <div class="h-3 w-full bg-zad-green flex-shrink-0"></div>
 
         <!-- Watermark -->
         <div class="watermark font-sans" dir="ltr">ZAD GROUP</div>
@@ -290,7 +312,7 @@
         </div>
 
         <!-- FOOTER: Dark Website Footer Style -->
-        <div class="bg-zad-dark text-zad-grayLight p-6 text-[11px] mt-auto">
+        <div class="bg-zad-dark text-zad-grayLight p-6 text-[11px] mt-auto flex-shrink-0">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="flex flex-col gap-2">
                     <div class="flex items-start gap-2">
