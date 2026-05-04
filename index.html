@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مفردات مرتب وإشعار تحويل - مجموعة زاد</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zad: {
+                            green: '#339966',      /* Primary Accent from website */
+                            dark: '#1d1e20',       /* Dark Footer/Hero background */
+                            grayLight: '#f4f4f4',  /* Light gray from website */
+                            gray: '#e9e9e9',       /* Medium gray */
+                            textMain: '#302727',   /* Primary text color */
+                            textMuted: '#6b7280'   /* Muted text color (adjusted for better contrast without bolding) */
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            background-color: #e5e7eb;
+            -webkit-font-smoothing: antialiased;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        .editable {
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            padding: 2px 6px;
+            border: 1px dashed transparent;
+        }
+        
+        body.edit-mode-active .editable { cursor: text; border-color: #339966; background-color: #f0fdf4; }
+        body.edit-mode-active .editable:hover { border-color: #339966; background-color: #dcfce7; }
+
+        /* Document Watermark for realism */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 10rem;
+            font-weight: 700;
+            color: rgba(51, 153, 102, 0.03); /* Faint Zad Green */
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+        }
+
+        /* Modern Print Optimization */
+        @media print {
+            @page { size: A4; margin: 0; }
+            body { background-color: white !important; margin: 0 !important; padding: 0 !important; }
+            .no-print { display: none !important; }
+            #invoice-container {
+                width: 210mm !important;
+                height: 297mm !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                transform: scale(1);
+            }
+            .content-wrapper { padding: 2rem 3rem !important; }
+            * { overflow: visible !important; }
+            .watermark { color: rgba(51, 153, 102, 0.04) !important; }
+        }
+    </style>
+</head>
+<body class="py-4 sm:py-10 flex flex-col items-center text-zad-textMain">
+
+    <!-- Floating Control Bar -->
+    <div class="no-print fixed bottom-6 left-6 z-50 flex flex-col sm:flex-row gap-3 dir-ltr">
+        <!-- SMART CONTROLS (Hidden by default) -->
+        <div id="smart-date-container" class="hidden bg-white shadow-xl border-2 border-zad-green rounded-full px-5 py-2 items-center justify-center gap-3 transition-all flex-wrap">
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-zad-green uppercase tracking-wider">تغيير الشهر:</span>
+                <input type="month" id="smart-month" class="text-sm font-sans font-bold text-zad-dark bg-transparent outline-none cursor-pointer" value="2026-05" onchange="updateSmartFields()">
+            </div>
+            <div class="h-5 w-px bg-slate-200"></div>
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-zad-green uppercase tracking-wider">تغيير الراتب ($):</span>
+                <input type="number" id="smart-amount" class="text-sm font-sans font-bold text-zad-dark bg-transparent outline-none cursor-pointer w-20 text-center border-b border-dashed border-zad-gray focus:border-zad-green" value="1500" oninput="updateSmartFields()">
+            </div>
+        </div>
+
+        <button id="toggleEditBtn" onclick="toggleEditMode()" class="bg-white shadow-xl border border-slate-200 rounded-full px-6 py-3 flex items-center justify-center gap-2 text-slate-700 font-semibold hover:bg-slate-50 transition-all active:scale-95 whitespace-nowrap">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <span id="editBtnText">تعديل البيانات</span>
+        </button>
+        <button onclick="window.print()" class="bg-zad-green shadow-xl text-white rounded-full px-8 py-3 flex items-center justify-center gap-2 font-semibold hover:bg-green-700 transition-all active:scale-95 whitespace-nowrap">
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>حفظ / طباعة</span>
+        </button>
+    </div>
+
+    <!-- MAIN VOUCHER / A4 PAPER -->
+    <div id="invoice-container" class="bg-white w-full max-w-[210mm] shadow-2xl flex flex-col min-h-[297mm] relative overflow-hidden">
+        
+        <!-- Top Green Accent Line -->
+        <div class="h-3 w-full bg-zad-green"></div>
+
+        <!-- Watermark -->
+        <div class="watermark font-sans" dir="ltr">ZAD GROUP</div>
+
+        <div class="content-wrapper p-8 sm:p-12 flex flex-col gap-6 flex-grow relative z-10">
+            
+            <!-- HEADER: Logo & Letterhead Details -->
+            <div class="flex justify-between items-start border-b-[2px] border-zad-gray pb-6">
+                <!-- Right Side: Logo -->
+                <div class="flex flex-col max-w-sm">
+                    <img src="https://zadgroup.net/wp-content/uploads/2019/03/logo-zad@3x-e1553439333233.png" alt="Zad Group Logo" class="h-16 object-contain object-right" 
+                         onerror="this.outerHTML='<h2 class=\'text-3xl font-bold text-zad-green\'>ZAD <span class=\'text-zad-dark\'>GROUP</span></h2>'">
+                    <div class="text-[13px] text-zad-textMuted mt-3 leading-relaxed">
+                        <p class="editable font-semibold text-zad-textMain">مجموعة زاد (Zad Group)</p>
+                        <p class="editable">شركة متخصصة في مجال التقنية والإعلام والنشر وخدمات التعليم الرقمي.</p>
+                    </div>
+                </div>
+
+                <!-- Left Side: Official Document Meta -->
+                <div class="text-left flex flex-col items-end">
+                    <h1 class="text-2xl font-bold text-zad-dark border-b-2 border-zad-green pb-1 mb-2 inline-block">إشعار صرف / إثبات دخل</h1>
+                    <p class="text-xs text-zad-textMuted uppercase tracking-widest mb-4 font-sans" dir="ltr">Salary & Remittance Advice</p>
+                    
+                    <table class="text-sm font-sans text-left border border-zad-gray bg-zad-grayLight rounded overflow-hidden" dir="ltr">
+                        <tbody>
+                            <tr class="border-b border-white">
+                                <td class="px-3 py-1.5 bg-zad-gray text-zad-dark font-medium text-xs uppercase">Date</td>
+                                <td class="px-3 py-1.5 editable font-semibold text-zad-textMain" id="vouch-date">04 May 2026</td>
+                            </tr>
+                            <tr class="border-b border-white">
+                                <td class="px-3 py-1.5 bg-zad-gray text-zad-dark font-medium text-xs uppercase">Method</td>
+                                <td class="px-3 py-1.5 editable font-semibold text-zad-textMain" id="vouch-method">Wire Transfer</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-1.5 bg-zad-gray text-zad-dark font-medium text-xs uppercase">Ref No</td>
+                                <td class="px-3 py-1.5 editable font-semibold text-zad-textMain" id="vouch-num">#PAY-26-05-101</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- EMPLOYEE INFO BOX (Centered Grid) -->
+            <div class="mt-2">
+                <div class="bg-zad-dark text-white px-4 py-2 rounded-t-lg inline-block font-medium text-sm">
+                    <i class="fa-solid fa-user-check text-zad-green mr-2"></i> بيانات المستفيد (Payee Information)
+                </div>
+                <div class="border border-zad-dark rounded-b-lg rounded-tl-lg overflow-hidden">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 text-sm">
+                        <div class="flex border-b sm:border-b-0 sm:border-l border-zad-gray">
+                            <div class="bg-zad-grayLight w-32 px-4 py-3 text-zad-textMuted text-xs flex items-center justify-center text-center">اسم الموظف<br>Name</div>
+                            <div class="px-4 py-3 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center" id="emp-name">محمد فتحي أحمد</div>
+                        </div>
+                        <div class="flex border-b sm:border-b-0 border-zad-gray">
+                            <div class="bg-zad-grayLight w-32 px-4 py-3 text-zad-textMuted text-xs flex items-center justify-center text-center">المسمى الوظيفي<br>Title</div>
+                            <div class="px-4 py-3 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center font-sans" dir="ltr" id="emp-title">Senior 3D Artist</div>
+                        </div>
+                        <div class="flex border-t border-zad-gray sm:border-l">
+                            <div class="bg-zad-grayLight w-32 px-4 py-3 text-zad-textMuted text-xs flex items-center justify-center text-center">الرقم الوظيفي<br>Emp ID</div>
+                            <div class="px-4 py-3 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center font-sans" dir="ltr" id="emp-id">ZG-2045</div>
+                        </div>
+                        <div class="flex border-t border-zad-gray">
+                            <div class="bg-zad-grayLight w-32 px-4 py-3 text-zad-textMuted text-xs flex items-center justify-center text-center">طبيعة العمل<br>Type</div>
+                            <div class="px-4 py-3 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center" id="emp-type">دوام كامل (Full-Time)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAYMENT DETAILS TABLE -->
+            <div class="mt-4">
+                <table class="w-full text-right border-collapse border border-zad-gray">
+                    <thead class="bg-zad-grayLight border-b border-zad-green">
+                        <tr>
+                            <th class="py-3 px-4 text-sm font-medium text-zad-dark w-1/2 border-l border-white">البيان (Description)</th>
+                            <th class="py-3 px-4 text-center text-sm font-medium text-zad-dark border-l border-white">الفترة (Period)</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-zad-dark">المبلغ (Amount)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-zad-textMain text-sm">
+                        <tr class="border-b border-zad-gray bg-white">
+                            <td class="py-6 px-4 align-top border-l border-zad-gray">
+                                <div class="editable font-semibold text-base mb-1 text-zad-dark" id="item-title">راتب شهر مايو 2026</div>
+                                <div class="editable text-xs text-zad-textMuted font-sans" id="item-desc">Monthly Salary for May 2026 - Professional 3D Design Services.</div>
+                            </td>
+                            <td class="py-6 px-4 text-center align-top border-l border-zad-gray">
+                                <span class="editable bg-zad-grayLight text-zad-dark px-3 py-1 rounded font-medium font-sans text-xs" id="item-period">May 2026</span>
+                            </td>
+                            <td class="py-6 px-4 text-left align-top font-bold text-lg font-sans" dir="ltr">
+                                <span class="editable" id="item-total">$1,500.00</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- TOTAL SUMMARY -->
+            <div class="flex justify-between items-center mt-3 border border-zad-dark p-1 rounded-lg">
+                <div class="flex items-center gap-3 px-4">
+                    <div class="bg-zad-green text-white w-8 h-8 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-zad-textMuted">حالة الدفع (Status)</div>
+                        <div class="text-zad-green font-semibold text-sm">مدفوع وتم التحويل (Paid)</div>
+                    </div>
+                </div>
+                <div class="bg-zad-dark text-white px-8 py-3 rounded text-left flex flex-col justify-center min-w-[250px]" dir="ltr">
+                    <span class="text-[10px] text-zad-gray block uppercase tracking-widest mb-1 opacity-80">Total Transferred</span>
+                    <span class="editable text-xl font-bold text-zad-green" id="grand-total">$1,500.00</span>
+                </div>
+            </div>
+
+            <!-- TRANSFER DESTINATION DETAILS (BANK INFO) -->
+            <div class="mt-6 bg-zad-grayLight border border-zad-gray p-6 rounded-lg relative">
+                <h3 class="font-semibold text-zad-dark text-sm mb-4 pb-2 border-b border-zad-gray flex items-center gap-2">
+                    <i class="fa-solid fa-money-bill-transfer text-zad-green"></i> تفاصيل المعاملة البنكية <span class="text-xs text-zad-textMuted font-sans font-normal">(Transaction & Bank Details)</span>
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-12 text-sm">
+                    <div class="flex justify-between items-end border-b border-zad-gray border-dashed pb-1">
+                        <span class="text-zad-textMuted text-xs">اسم البنك <span class="font-sans">(Bank)</span>:</span>
+                        <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-bank">CIB Egypt</span>
+                    </div>
+                    <div class="flex justify-between items-end border-b border-zad-gray border-dashed pb-1">
+                        <span class="text-zad-textMuted text-xs">رقم الحساب <span class="font-sans">(Acc No)</span>:</span>
+                        <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-acc">100072273286</span>
+                    </div>
+                    <div class="flex justify-between items-end border-b border-zad-gray border-dashed pb-1">
+                        <span class="text-zad-textMuted text-xs">اسم المستفيد <span class="font-sans">(Beneficiary)</span>:</span>
+                        <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-name">Mohamed Fathi Ahmed</span>
+                    </div>
+                    <div class="flex justify-between items-end border-b border-zad-gray border-dashed pb-1">
+                        <span class="text-zad-textMuted text-xs">السويفت كود <span class="font-sans">(SWIFT)</span>:</span>
+                        <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-swift">CIBEGEXX</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-zad-gray border-dashed pb-2 md:col-span-2 mt-2">
+                        <span class="text-zad-textMuted text-xs">رقم الآيبان <span class="font-sans">(IBAN)</span>:</span>
+                        <span class="editable font-bold text-zad-dark text-left font-sans text-base bg-white border border-zad-gray px-3 py-1 rounded" id="dest-iban" dir="ltr">EG130010012700000100072273286</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIGNATURE SECTION (Electronic) -->
+            <div class="mt-8 pt-6 border-t border-zad-gray flex justify-between items-end">
+                <div class="text-[11px] text-zad-textMuted max-w-[55%] leading-relaxed">
+                    <p class="mb-1 text-justify">تشهد شركة مجموعة زاد بأن الموظف المذكور أعلاه يعمل لديها، وبناءً على طلبه أُعطي هذا المشهد لتقديمه لمن يهمه الأمر دون أدنى مسؤولية مالية أو قانونية على الشركة.</p>
+                    <p class="font-sans text-justify" dir="ltr">This document is issued upon the employee's request for official banking purposes without any financial or legal liability on the company.</p>
+                </div>
+                
+                <div class="text-center w-64 mt-4">
+                    <h4 class="editable font-bold text-zad-dark text-base mb-1">محمد كامل</h4>
+                    <p class="editable text-sm text-zad-textMain mb-1">مدير الموارد البشرية (HR Manager)</p>
+                    <p class="editable text-[11px] text-zad-textMuted mt-1">مجموعة زاد - الإدارة المالية</p>
+                    
+                    <!-- Electronic Document Badge -->
+                    <div class="mt-3 inline-block bg-zad-grayLight text-zad-textMuted text-[10px] px-3 py-1.5 rounded border border-zad-gray font-sans">
+                        <i class="fa-solid fa-laptop-file mr-1"></i> مستند معتمد إلكترونياً ولا يتطلب توقيع
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER: Dark Website Footer Style -->
+        <div class="bg-zad-dark text-zad-grayLight p-6 text-[11px] mt-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-start gap-2">
+                        <i class="fa-solid fa-location-dot text-zad-green mt-1"></i>
+                        <span class="editable leading-snug"><strong>الظهـران:</strong> طريق الأمير محمد بن فهد – حي تلال الدوحة – الخبر<br>ص ب 20600 . رمز بريدي 31952</span>
+                    </div>
+                    <div class="flex items-start gap-2 border-t border-gray-700 pt-2 mt-1">
+                        <i class="fa-solid fa-location-dot text-zad-green mt-1"></i>
+                        <span class="editable leading-snug"><strong>جـدة:</strong> طريق الملك عبد العزيز – حي الشاطئ<br>ص ب 126371</span>
+                    </div>
+                </div>
+                <div class="md:text-left font-sans flex flex-col justify-center gap-3 border-t md:border-t-0 md:border-l border-gray-700 pt-3 md:pt-0 pl-0 md:pl-4" dir="ltr">
+                    <div class="flex items-center md:justify-end gap-2">
+                        <span class="editable">hr@zadgroup.net</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="editable">pr@zadgroup.net</span>
+                        <i class="fa-solid fa-envelope text-zad-green text-sm"></i>
+                    </div>
+                    <div class="flex items-center md:justify-end gap-2">
+                        <span class="editable font-medium text-white">www.zadgroup.net</span>
+                        <i class="fa-solid fa-globe text-zad-green text-sm"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const editBtn = document.getElementById('toggleEditBtn');
+        const editBtnText = document.getElementById('editBtnText');
+        const editableElements = document.querySelectorAll('.editable');
+        const smartDateCont = document.getElementById('smart-date-container');
+        let isEditing = false;
+
+        function toggleEditMode() {
+            isEditing = !isEditing;
+            document.body.classList.toggle('edit-mode-active');
+            
+            if (isEditing) {
+                editBtnText.innerText = "إنهاء التعديل";
+                editBtn.classList.add('bg-green-50', 'text-green-700', 'border-green-200');
+                smartDateCont.classList.remove('hidden');
+                smartDateCont.classList.add('flex');
+                editableElements.forEach(el => el.setAttribute('contenteditable', 'true'));
+            } else {
+                editBtnText.innerText = "تعديل البيانات";
+                editBtn.classList.remove('bg-green-50', 'text-green-700', 'border-green-200');
+                smartDateCont.classList.add('hidden');
+                smartDateCont.classList.remove('flex');
+                editableElements.forEach(el => el.setAttribute('contenteditable', 'false'));
+            }
+        }
+
+        // --- SMART CONTROL LOGIC ---
+        const arMonths = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+        const enMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function updateSmartFields() {
+            // 1. Update Date & Texts
+            const monthStr = document.getElementById('smart-month').value;
+            if (monthStr) {
+                const [year, month] = monthStr.split('-');
+                const yNum = parseInt(year);
+                const mNum = parseInt(month);
+                const yy = year.substring(2);
+                
+                let seq = (yNum - 2026) * 12 + mNum;
+                if (seq < 1) seq = 1; 
+                const invoiceSeq = 100 + seq; 
+
+                const arName = arMonths[mNum - 1];
+                const enName = enMonths[mNum - 1];
+
+                document.getElementById('vouch-num').innerText = `#PAY-${yy}-${month}-${invoiceSeq}`;
+                document.getElementById('vouch-date').innerText = `04 ${enName} ${year}`;
+                document.getElementById('item-period').innerText = `${month}/${year}`;
+                document.getElementById('item-title').innerText = `راتب شهر ${arName} ${year}`;
+                document.getElementById('item-desc').innerText = `Monthly Salary for ${enName} ${year} - Professional 3D Design Services.`;
+            }
+
+            // 2. Update Amount
+            let amountVal = parseFloat(document.getElementById('smart-amount').value);
+            if (isNaN(amountVal)) amountVal = 0;
+            
+            // Format number to USD currency (e.g., $1,500.00)
+            const formatter = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2
+            });
+            
+            const formattedAmount = formatter.format(amountVal);
+            document.getElementById('item-total').innerText = formattedAmount;
+            document.getElementById('grand-total').innerText = formattedAmount;
+        }
+
+        // Init
+        editableElements.forEach(el => el.setAttribute('contenteditable', 'false'));
+    </script>
+</body>
+</html>
