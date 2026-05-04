@@ -13,12 +13,12 @@
                 extend: {
                     colors: {
                         zad: {
-                            green: '#339966',
-                            dark: '#1d1e20',
-                            grayLight: '#f4f4f4',
-                            gray: '#e9e9e9',
-                            textMain: '#302727',
-                            textMuted: '#6b7280'
+                            green: '#339966',      /* Primary Accent from website */
+                            dark: '#1d1e20',       /* Dark Footer/Hero background */
+                            grayLight: '#f4f4f4',  /* Light gray from website */
+                            gray: '#e9e9e9',       /* Medium gray */
+                            textMain: '#302727',   /* Primary text color */
+                            textMuted: '#6b7280'   /* Muted text color */
                         }
                     },
                     fontFamily: {
@@ -29,6 +29,7 @@
         }
     </script>
     <style>
+        /* Strict Box Sizing for accurate measurements */
         * { box-sizing: border-box !important; }
 
         body { 
@@ -49,6 +50,7 @@
         body.edit-mode-active .editable { cursor: text; border-color: #339966; background-color: #f0fdf4; }
         body.edit-mode-active .editable:hover { border-color: #339966; background-color: #dcfce7; }
 
+        /* Document Watermark for realism */
         .watermark {
             position: absolute;
             top: 50%;
@@ -56,7 +58,7 @@
             transform: translate(-50%, -50%) rotate(-45deg);
             font-size: 10rem;
             font-weight: 700;
-            color: rgba(51, 153, 102, 0.03);
+            color: rgba(51, 153, 102, 0.03); /* Faint Zad Green */
             white-space: nowrap;
             pointer-events: none;
             z-index: 0;
@@ -64,7 +66,7 @@
         }
 
         /* ============================================================
-           PRINT STYLES - THE KEY FIX
+           PRINT STYLES - THE KEY FIX (Page Scaler Method)
            ============================================================ */
         @media print {
             @page { 
@@ -130,6 +132,18 @@
             .text-white { color: white !important; }
             .text-zad-green, [class*="text-zad-green"] { color: #339966 !important; }
 
+            /* Compact inner paddings and margins for print */
+            .content-wrapper { 
+                padding: 2rem 2.5rem !important; 
+                gap: 0.75rem !important; 
+            }
+            .bg-zad-dark.p-6 { padding: 1rem 1.5rem !important; }
+            .mt-6 { margin-top: 0.75rem !important; }
+            .mt-8 { margin-top: 1rem !important; }
+            .mb-4 { margin-bottom: 0.5rem !important; }
+            .py-4 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+            .py-6 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+
             /* Prevent page breaks inside elements */
             table, tr, td, th, div { page-break-inside: avoid !important; }
         }
@@ -138,7 +152,8 @@
 <body class="py-4 sm:py-10 flex flex-col items-center text-zad-textMain">
 
     <!-- Floating Control Bar -->
-    <div class="no-print fixed bottom-6 left-6 z-50 flex flex-col sm:flex-row gap-3">
+    <div class="no-print fixed bottom-6 left-6 z-50 flex flex-col sm:flex-row gap-3 dir-ltr">
+        <!-- SMART CONTROLS -->
         <div id="smart-date-container" class="hidden bg-white shadow-xl border-2 border-zad-green rounded-full px-5 py-2 items-center justify-center gap-3 transition-all flex-wrap">
             <div class="flex items-center gap-2">
                 <span class="text-[10px] font-bold text-zad-green uppercase tracking-wider">تغيير الشهر:</span>
@@ -172,24 +187,24 @@
             <!-- Watermark -->
             <div class="watermark font-sans" dir="ltr">ZAD GROUP</div>
 
-            <!-- CONTENT -->
-            <div class="px-8 py-6 sm:px-10 sm:py-8 flex flex-col gap-4 flex-grow relative z-10">
+            <div class="content-wrapper p-8 sm:p-12 flex flex-col gap-6 flex-grow relative z-10">
                 
-                <!-- HEADER -->
-                <div class="flex justify-between items-start border-b-[2px] border-zad-gray pb-5">
+                <!-- HEADER: Logo & Letterhead Details -->
+                <div class="flex justify-between items-start border-b-[2px] border-zad-gray pb-6">
+                    <!-- Right Side: Logo -->
                     <div class="flex flex-col max-w-sm">
-                        <img src="https://zadgroup.net/wp-content/uploads/2019/03/logo-zad@3x-e1553439333233.png" 
-                             alt="Zad Group Logo" class="h-14 object-contain object-right" 
+                        <img src="https://zadgroup.net/wp-content/uploads/2019/03/logo-zad@3x-e1553439333233.png" alt="Zad Group Logo" class="h-16 object-contain object-right" 
                              onerror="this.outerHTML='<h2 class=\'text-3xl font-bold text-zad-green\'>ZAD <span class=\'text-zad-dark\'>GROUP</span></h2>'">
-                        <div class="text-[12px] text-zad-textMuted mt-2 leading-relaxed">
+                        <div class="text-[13px] text-zad-textMuted mt-3 leading-relaxed">
                             <p class="editable font-semibold text-zad-textMain">مجموعة زاد (Zad Group)</p>
                             <p class="editable">شركة متخصصة في مجال التقنية والإعلام والنشر وخدمات التعليم الرقمي.</p>
                         </div>
                     </div>
 
+                    <!-- Left Side: Official Document Meta -->
                     <div class="text-left flex flex-col items-end">
-                        <h1 class="text-xl font-bold text-zad-dark border-b-2 border-zad-green pb-1 mb-1 inline-block">إشعار صرف / إثبات دخل</h1>
-                        <p class="text-xs text-zad-textMuted uppercase tracking-widest mb-3 font-sans" dir="ltr">Salary &amp; Remittance Advice</p>
+                        <h1 class="text-2xl font-bold text-zad-dark border-b-2 border-zad-green pb-1 mb-2 inline-block">إشعار صرف / إثبات دخل</h1>
+                        <p class="text-xs text-zad-textMuted uppercase tracking-widest mb-4 font-sans" dir="ltr">Salary & Remittance Advice</p>
                         
                         <table class="text-sm font-sans text-left border border-zad-gray bg-zad-grayLight rounded overflow-hidden" dir="ltr">
                             <tbody>
@@ -210,53 +225,53 @@
                     </div>
                 </div>
 
-                <!-- EMPLOYEE INFO -->
-                <div>
+                <!-- EMPLOYEE INFO BOX (Centered Grid) -->
+                <div class="mt-2">
                     <div class="bg-zad-dark text-white px-4 py-2 rounded-t-lg inline-block font-medium text-sm">
                         <i class="fa-solid fa-user-check text-zad-green mr-2"></i> بيانات المستفيد (Payee Information)
                     </div>
                     <div class="border border-zad-dark rounded-b-lg rounded-tl-lg overflow-hidden">
-                        <div class="grid grid-cols-2 text-sm">
-                            <div class="flex border-b border-l border-zad-gray">
-                                <div class="bg-zad-grayLight w-28 px-3 py-2.5 text-zad-textMuted text-xs flex items-center justify-center text-center">اسم الموظف<br>Name</div>
-                                <div class="px-3 py-2.5 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center" id="emp-name">محمد فتحي أحمد</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 text-sm">
+                            <div class="flex border-b sm:border-b-0 sm:border-l border-zad-gray">
+                                <div class="bg-zad-grayLight w-32 px-4 py-3 text-zad-textMuted text-xs flex items-center justify-center text-center">اسم الموظف<br>Name</div>
+                                <div class="px-4 py-3 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center" id="emp-name">محمد فتحي أحمد</div>
                             </div>
-                            <div class="flex border-b border-zad-gray">
-                                <div class="bg-zad-grayLight w-28 px-3 py-2.5 text-zad-textMuted text-xs flex items-center justify-center text-center">المسمى الوظيفي<br>Title</div>
-                                <div class="px-3 py-2.5 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center font-sans" dir="ltr" id="emp-title">Senior 3D Artist</div>
+                            <div class="flex border-b sm:border-b-0 border-zad-gray">
+                                <div class="bg-zad-grayLight w-32 px-4 py-3 text-zad-textMuted text-xs flex items-center justify-center text-center">المسمى الوظيفي<br>Title</div>
+                                <div class="px-4 py-3 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center font-sans" dir="ltr" id="emp-title">Senior 3D Artist</div>
                             </div>
-                            <div class="flex border-l border-zad-gray">
-                                <div class="bg-zad-grayLight w-28 px-3 py-2.5 text-zad-textMuted text-xs flex items-center justify-center text-center">الرقم الوظيفي<br>Emp ID</div>
-                                <div class="px-3 py-2.5 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center font-sans" dir="ltr" id="emp-id">ZG-2045</div>
+                            <div class="flex border-t border-zad-gray sm:border-l">
+                                <div class="bg-zad-grayLight w-32 px-4 py-3 text-zad-textMuted text-xs flex items-center justify-center text-center">الرقم الوظيفي<br>Emp ID</div>
+                                <div class="px-4 py-3 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center font-sans" dir="ltr" id="emp-id">ZG-2045</div>
                             </div>
-                            <div class="flex border-zad-gray">
-                                <div class="bg-zad-grayLight w-28 px-3 py-2.5 text-zad-textMuted text-xs flex items-center justify-center text-center">طبيعة العمل<br>Type</div>
-                                <div class="px-3 py-2.5 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center" id="emp-type">دوام كامل (Full-Time)</div>
+                            <div class="flex border-t border-zad-gray">
+                                <div class="bg-zad-grayLight w-32 px-4 py-3 text-zad-textMuted text-xs flex items-center justify-center text-center">طبيعة العمل<br>Type</div>
+                                <div class="px-4 py-3 font-semibold text-zad-dark editable flex-1 flex items-center justify-center text-center" id="emp-type">دوام كامل (Full-Time)</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- PAYMENT TABLE -->
-                <div>
+                <!-- PAYMENT DETAILS TABLE -->
+                <div class="mt-4">
                     <table class="w-full text-right border-collapse border border-zad-gray">
                         <thead class="bg-zad-grayLight border-b border-zad-green">
                             <tr>
-                                <th class="py-2.5 px-4 text-sm font-medium text-zad-dark w-1/2 border-l border-white">البيان (Description)</th>
-                                <th class="py-2.5 px-4 text-center text-sm font-medium text-zad-dark border-l border-white">الفترة (Period)</th>
-                                <th class="py-2.5 px-4 text-left text-sm font-medium text-zad-dark">المبلغ (Amount)</th>
+                                <th class="py-3 px-4 text-sm font-medium text-zad-dark w-1/2 border-l border-white">البيان (Description)</th>
+                                <th class="py-3 px-4 text-center text-sm font-medium text-zad-dark border-l border-white">الفترة (Period)</th>
+                                <th class="py-3 px-4 text-left text-sm font-medium text-zad-dark">المبلغ (Amount)</th>
                             </tr>
                         </thead>
                         <tbody class="text-zad-textMain text-sm">
                             <tr class="border-b border-zad-gray bg-white">
-                                <td class="py-3 px-4 align-top border-l border-zad-gray">
-                                    <div class="editable font-semibold text-sm mb-1 text-zad-dark" id="item-title">راتب شهر مايو 2026</div>
+                                <td class="py-4 px-4 align-top border-l border-zad-gray">
+                                    <div class="editable font-semibold text-base mb-1 text-zad-dark" id="item-title">راتب شهر مايو 2026</div>
                                     <div class="editable text-xs text-zad-textMuted font-sans" id="item-desc">Monthly Salary for May 2026 - Professional 3D Design Services.</div>
                                 </td>
-                                <td class="py-3 px-4 text-center align-top border-l border-zad-gray">
-                                    <span class="editable bg-zad-grayLight text-zad-dark px-2 py-1 rounded font-medium font-sans text-xs" id="item-period">May 2026</span>
+                                <td class="py-4 px-4 text-center align-top border-l border-zad-gray">
+                                    <span class="editable bg-zad-grayLight text-zad-dark px-3 py-1 rounded font-medium font-sans text-xs" id="item-period">May 2026</span>
                                 </td>
-                                <td class="py-3 px-4 text-left align-top font-bold text-lg font-sans" dir="ltr">
+                                <td class="py-4 px-4 text-left align-top font-bold text-lg font-sans" dir="ltr">
                                     <span class="editable" id="item-total">$1,500.00</span>
                                 </td>
                             </tr>
@@ -265,9 +280,9 @@
                 </div>
                 
                 <!-- TOTAL SUMMARY -->
-                <div class="flex justify-between items-center border border-zad-dark p-1 rounded-lg">
+                <div class="flex justify-between items-center mt-2 border border-zad-dark p-1 rounded-lg">
                     <div class="flex items-center gap-3 px-4">
-                        <div class="bg-zad-green text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div class="bg-zad-green text-white w-8 h-8 rounded-full flex items-center justify-center">
                             <i class="fa-solid fa-check"></i>
                         </div>
                         <div>
@@ -275,54 +290,56 @@
                             <div class="text-zad-green font-semibold text-sm">مدفوع وتم التحويل (Paid)</div>
                         </div>
                     </div>
-                    <div class="bg-zad-dark text-white px-6 py-2.5 rounded text-left flex flex-col justify-center min-w-[220px]" dir="ltr">
+                    <div class="bg-zad-dark text-white px-8 py-3 rounded text-left flex flex-col justify-center min-w-[250px]" dir="ltr">
                         <span class="text-[10px] text-zad-gray block uppercase tracking-widest mb-1 opacity-80">Total Transferred</span>
                         <span class="editable text-xl font-bold text-zad-green" id="grand-total">$1,500.00</span>
                     </div>
                 </div>
 
-                <!-- BANK DETAILS -->
-                <div class="bg-zad-grayLight border border-zad-gray p-4 rounded-lg relative">
+                <!-- TRANSFER DESTINATION DETAILS (BANK INFO) -->
+                <div class="mt-4 bg-zad-grayLight border border-zad-gray p-5 rounded-lg relative">
                     <h3 class="font-semibold text-zad-dark text-sm mb-3 pb-2 border-b border-zad-gray flex items-center gap-2">
-                        <i class="fa-solid fa-money-bill-transfer text-zad-green"></i> تفاصيل المعاملة البنكية <span class="text-xs text-zad-textMuted font-sans font-normal">(Transaction &amp; Bank Details)</span>
+                        <i class="fa-solid fa-money-bill-transfer text-zad-green"></i> تفاصيل المعاملة البنكية <span class="text-xs text-zad-textMuted font-sans font-normal">(Transaction & Bank Details)</span>
                     </h3>
                     
-                    <div class="grid grid-cols-2 gap-y-2 gap-x-10 text-sm">
-                        <div class="flex justify-between items-end border-b border-dashed border-zad-gray pb-1">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-12 text-sm">
+                        <div class="flex justify-between items-end border-b border-zad-gray border-dashed pb-1">
                             <span class="text-zad-textMuted text-xs">اسم البنك <span class="font-sans">(Bank)</span>:</span>
                             <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-bank">CIB Egypt</span>
                         </div>
-                        <div class="flex justify-between items-end border-b border-dashed border-zad-gray pb-1">
+                        <div class="flex justify-between items-end border-b border-zad-gray border-dashed pb-1">
                             <span class="text-zad-textMuted text-xs">رقم الحساب <span class="font-sans">(Acc No)</span>:</span>
                             <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-acc">100072273286</span>
                         </div>
-                        <div class="flex justify-between items-end border-b border-dashed border-zad-gray pb-1">
+                        <div class="flex justify-between items-end border-b border-zad-gray border-dashed pb-1">
                             <span class="text-zad-textMuted text-xs">اسم المستفيد <span class="font-sans">(Beneficiary)</span>:</span>
                             <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-name">Mohamed Fathi Ahmed</span>
                         </div>
-                        <div class="flex justify-between items-end border-b border-dashed border-zad-gray pb-1">
+                        <div class="flex justify-between items-end border-b border-zad-gray border-dashed pb-1">
                             <span class="text-zad-textMuted text-xs">السويفت كود <span class="font-sans">(SWIFT)</span>:</span>
                             <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-swift">CIBEGEXX</span>
                         </div>
-                        <div class="flex justify-between items-center border-b border-dashed border-zad-gray pb-2 col-span-2 mt-1">
+                        <div class="flex justify-between items-center border-b border-zad-gray border-dashed pb-2 md:col-span-2 mt-1">
                             <span class="text-zad-textMuted text-xs">رقم الآيبان <span class="font-sans">(IBAN)</span>:</span>
-                            <span class="editable font-bold text-zad-dark text-left font-sans text-sm bg-white border border-zad-gray px-3 py-1 rounded" id="dest-iban" dir="ltr">EG130010012700000100072273286</span>
+                            <span class="editable font-bold text-zad-dark text-left font-sans text-base bg-white border border-zad-gray px-3 py-1 rounded" id="dest-iban" dir="ltr">EG130010012700000100072273286</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- SIGNATURE SECTION -->
-                <div class="pt-3 border-t border-zad-gray flex justify-between items-end">
+                <!-- SIGNATURE SECTION (Electronic) -->
+                <div class="mt-4 pt-4 border-t border-zad-gray flex justify-between items-end">
                     <div class="text-[11px] text-zad-textMuted max-w-[55%] leading-relaxed">
                         <p class="mb-1 text-justify">تشهد شركة مجموعة زاد بأن الموظف المذكور أعلاه يعمل لديها، وبناءً على طلبه أُعطي هذا المشهد لتقديمه لمن يهمه الأمر دون أدنى مسؤولية مالية أو قانونية على الشركة.</p>
                         <p class="font-sans text-justify" dir="ltr">This document is issued upon the employee's request for official banking purposes without any financial or legal liability on the company.</p>
                     </div>
                     
-                    <div class="text-center w-56">
-                        <h4 class="editable font-bold text-zad-dark text-base mb-0.5">محمد كامل</h4>
-                        <p class="editable text-sm text-zad-textMain mb-0.5">مدير الموارد البشرية (HR Manager)</p>
-                        <p class="editable text-[11px] text-zad-textMuted">مجموعة زاد - الإدارة المالية</p>
-                        <div class="mt-2 inline-block bg-zad-grayLight text-zad-textMuted text-[10px] px-3 py-1.5 rounded border border-zad-gray font-sans">
+                    <div class="text-center w-64 mt-4">
+                        <h4 class="editable font-bold text-zad-dark text-base mb-1">محمد كامل</h4>
+                        <p class="editable text-sm text-zad-textMain mb-1">مدير الموارد البشرية (HR Manager)</p>
+                        <p class="editable text-[11px] text-zad-textMuted mt-1">مجموعة زاد - الإدارة المالية</p>
+                        
+                        <!-- Electronic Document Badge -->
+                        <div class="mt-3 inline-block bg-zad-grayLight text-zad-textMuted text-[10px] px-3 py-1.5 rounded border border-zad-gray font-sans">
                             <i class="fa-solid fa-laptop-file mr-1"></i> مستند معتمد إلكترونياً ولا يتطلب توقيع
                         </div>
                     </div>
@@ -330,29 +347,29 @@
 
             </div>
 
-            <!-- FOOTER -->
-            <div class="bg-zad-dark text-zad-grayLight p-5 mt-auto flex-shrink-0" style="background-color: #1d1e20 !important;">
-                <div class="grid grid-cols-2 gap-4">
+            <!-- FOOTER: Dark Website Footer Style -->
+            <div class="bg-zad-dark text-zad-grayLight p-6 text-[11px] mt-auto flex-shrink-0" style="background-color: #1d1e20 !important;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="flex flex-col gap-2">
                         <div class="flex items-start gap-2">
                             <i class="fa-solid fa-location-dot text-zad-green mt-1" style="color: #339966 !important;"></i>
-                            <span class="editable leading-snug text-[11px]" style="color: #f4f4f4 !important;"><strong>الظهـران:</strong> طريق الأمير محمد بن فهد – حي تلال الدوحة – الخبر<br>ص ب 20600 . رمز بريدي 31952</span>
+                            <span class="editable leading-snug" style="color: #f4f4f4 !important;"><strong>الظهـران:</strong> طريق الأمير محمد بن فهد – حي تلال الدوحة – الخبر<br>ص ب 20600 . رمز بريدي 31952</span>
                         </div>
                         <div class="flex items-start gap-2 border-t border-gray-700 pt-2 mt-1">
                             <i class="fa-solid fa-location-dot text-zad-green mt-1" style="color: #339966 !important;"></i>
-                            <span class="editable leading-snug text-[11px]" style="color: #f4f4f4 !important;"><strong>جـدة:</strong> طريق الملك عبد العزيز – حي الشاطئ<br>ص ب 126371</span>
+                            <span class="editable leading-snug" style="color: #f4f4f4 !important;"><strong>جـدة:</strong> طريق الملك عبد العزيز – حي الشاطئ<br>ص ب 126371</span>
                         </div>
                     </div>
-                    <div class="font-sans flex flex-col justify-center gap-2.5 border-t-0 border-l border-gray-700 pl-4 text-[11px]" dir="ltr" style="color: #f4f4f4 !important;">
-                        <div class="flex items-center justify-end gap-2">
+                    <div class="md:text-left font-sans flex flex-col justify-center gap-3 border-t md:border-t-0 md:border-l border-gray-700 pt-3 md:pt-0 pl-0 md:pl-4" dir="ltr" style="color: #f4f4f4 !important;">
+                        <div class="flex items-center md:justify-end gap-2">
                             <span class="editable" style="color: #f4f4f4 !important;">hr@zadgroup.net</span>
                             <span class="text-gray-600">|</span>
                             <span class="editable" style="color: #f4f4f4 !important;">pr@zadgroup.net</span>
-                            <i class="fa-solid fa-envelope" style="color: #339966 !important; font-size: 12px;"></i>
+                            <i class="fa-solid fa-envelope text-zad-green text-sm" style="color: #339966 !important;"></i>
                         </div>
-                        <div class="flex items-center justify-end gap-2">
-                            <span class="editable font-medium" style="color: white !important;">www.zadgroup.net</span>
-                            <i class="fa-solid fa-globe" style="color: #339966 !important; font-size: 12px;"></i>
+                        <div class="flex items-center md:justify-end gap-2">
+                            <span class="editable font-medium text-white" style="color: white !important;">www.zadgroup.net</span>
+                            <i class="fa-solid fa-globe text-zad-green text-sm" style="color: #339966 !important;"></i>
                         </div>
                     </div>
                 </div>
@@ -386,6 +403,7 @@
             }
         }
 
+        // --- SMART CONTROL LOGIC ---
         const arMonths = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
         const enMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -396,9 +414,11 @@
                 const yNum = parseInt(year);
                 const mNum = parseInt(month);
                 const yy = year.substring(2);
+                
                 let seq = (yNum - 2026) * 12 + mNum;
                 if (seq < 1) seq = 1; 
-                const invoiceSeq = 100 + seq;
+                const invoiceSeq = 100 + seq; 
+
                 const arName = arMonths[mNum - 1];
                 const enName = enMonths[mNum - 1];
 
