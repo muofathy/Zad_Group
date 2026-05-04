@@ -64,17 +64,30 @@
         /* Modern Print Optimization */
         @media print {
             @page { size: A4; margin: 0; }
-            body { background-color: white !important; margin: 0 !important; padding: 0 !important; }
+            html, body { 
+                width: 210mm !important;
+                height: 297mm !important;
+                margin: 0 !important; 
+                padding: 0 !important; 
+                overflow: hidden !important; /* Force no scroll/second page */
+                background-color: white !important; 
+            }
             .no-print { display: none !important; }
             #invoice-container {
                 width: 210mm !important;
                 height: 297mm !important;
+                max-height: 297mm !important;
                 box-shadow: none !important;
-                margin: 0 !important;
+                margin: 0 auto !important;
                 padding: 0 !important;
-                transform: scale(1);
+                transform: scale(0.96); /* Scale down slightly to escape browser margins */
+                transform-origin: top center;
+                overflow: hidden !important;
             }
-            .content-wrapper { padding: 2rem 3rem !important; }
+            .content-wrapper { 
+                padding: 1.5rem 2.5rem !important; 
+                gap: 1rem !important; /* Reduce vertical gaps during print */
+            }
             * { overflow: visible !important; }
             .watermark { color: rgba(51, 153, 102, 0.04) !important; }
         }
@@ -193,14 +206,14 @@
                     </thead>
                     <tbody class="text-zad-textMain text-sm">
                         <tr class="border-b border-zad-gray bg-white">
-                            <td class="py-6 px-4 align-top border-l border-zad-gray">
+                            <td class="py-4 px-4 align-top border-l border-zad-gray">
                                 <div class="editable font-semibold text-base mb-1 text-zad-dark" id="item-title">راتب شهر مايو 2026</div>
                                 <div class="editable text-xs text-zad-textMuted font-sans" id="item-desc">Monthly Salary for May 2026 - Professional 3D Design Services.</div>
                             </td>
-                            <td class="py-6 px-4 text-center align-top border-l border-zad-gray">
+                            <td class="py-4 px-4 text-center align-top border-l border-zad-gray">
                                 <span class="editable bg-zad-grayLight text-zad-dark px-3 py-1 rounded font-medium font-sans text-xs" id="item-period">May 2026</span>
                             </td>
-                            <td class="py-6 px-4 text-left align-top font-bold text-lg font-sans" dir="ltr">
+                            <td class="py-4 px-4 text-left align-top font-bold text-lg font-sans" dir="ltr">
                                 <span class="editable" id="item-total">$1,500.00</span>
                             </td>
                         </tr>
@@ -209,7 +222,7 @@
             </div>
             
             <!-- TOTAL SUMMARY -->
-            <div class="flex justify-between items-center mt-3 border border-zad-dark p-1 rounded-lg">
+            <div class="flex justify-between items-center mt-2 border border-zad-dark p-1 rounded-lg">
                 <div class="flex items-center gap-3 px-4">
                     <div class="bg-zad-green text-white w-8 h-8 rounded-full flex items-center justify-center">
                         <i class="fa-solid fa-check"></i>
@@ -226,12 +239,12 @@
             </div>
 
             <!-- TRANSFER DESTINATION DETAILS (BANK INFO) -->
-            <div class="mt-6 bg-zad-grayLight border border-zad-gray p-6 rounded-lg relative">
-                <h3 class="font-semibold text-zad-dark text-sm mb-4 pb-2 border-b border-zad-gray flex items-center gap-2">
+            <div class="mt-4 bg-zad-grayLight border border-zad-gray p-5 rounded-lg relative">
+                <h3 class="font-semibold text-zad-dark text-sm mb-3 pb-2 border-b border-zad-gray flex items-center gap-2">
                     <i class="fa-solid fa-money-bill-transfer text-zad-green"></i> تفاصيل المعاملة البنكية <span class="text-xs text-zad-textMuted font-sans font-normal">(Transaction & Bank Details)</span>
                 </h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-12 text-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-12 text-sm">
                     <div class="flex justify-between items-end border-b border-zad-gray border-dashed pb-1">
                         <span class="text-zad-textMuted text-xs">اسم البنك <span class="font-sans">(Bank)</span>:</span>
                         <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-bank">CIB Egypt</span>
@@ -248,7 +261,7 @@
                         <span class="text-zad-textMuted text-xs">السويفت كود <span class="font-sans">(SWIFT)</span>:</span>
                         <span class="editable font-semibold text-zad-dark text-left font-sans" id="dest-swift">CIBEGEXX</span>
                     </div>
-                    <div class="flex justify-between items-center border-b border-zad-gray border-dashed pb-2 md:col-span-2 mt-2">
+                    <div class="flex justify-between items-center border-b border-zad-gray border-dashed pb-2 md:col-span-2 mt-1">
                         <span class="text-zad-textMuted text-xs">رقم الآيبان <span class="font-sans">(IBAN)</span>:</span>
                         <span class="editable font-bold text-zad-dark text-left font-sans text-base bg-white border border-zad-gray px-3 py-1 rounded" id="dest-iban" dir="ltr">EG130010012700000100072273286</span>
                     </div>
@@ -256,7 +269,7 @@
             </div>
 
             <!-- SIGNATURE SECTION (Electronic) -->
-            <div class="mt-8 pt-6 border-t border-zad-gray flex justify-between items-end">
+            <div class="mt-4 pt-4 border-t border-zad-gray flex justify-between items-end">
                 <div class="text-[11px] text-zad-textMuted max-w-[55%] leading-relaxed">
                     <p class="mb-1 text-justify">تشهد شركة مجموعة زاد بأن الموظف المذكور أعلاه يعمل لديها، وبناءً على طلبه أُعطي هذا المشهد لتقديمه لمن يهمه الأمر دون أدنى مسؤولية مالية أو قانونية على الشركة.</p>
                     <p class="font-sans text-justify" dir="ltr">This document is issued upon the employee's request for official banking purposes without any financial or legal liability on the company.</p>
